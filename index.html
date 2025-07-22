@@ -8,22 +8,160 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5fbff;
-            color: #333;
-            /* Centralização do card principal */
+            color: var(--text-color);
+            background-color: var(--body-bg);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- THEME VARIABLES --- */
+        :root {
+            --default-highlight-bg: #ffebee;
+            --default-highlight-border: #f44336;
+            --default-highlight-text: #f44336;
+            --default-info-bg: #e8f5e9;
+            --default-info-border: #4caf50;
+            --default-info-text: #2e7d32;
+            --default-warning-not-counts-text: #c62828;
+            --default-warning-not-counts-border: #ef9a9a;
+        }
+
+        body.theme-default {
+            --primary-color: #0066ff;
+            --primary-color-dark: #0052cc;
+            --primary-color-hover: #005ce6;
+            --primary-color-light: #e6f2ff;
+            --primary-color-border: #b3d1ff;
+            --body-bg: #f5fbff;
+            --card-bg: white;
+            --text-color: #333;
+            --text-color-light: #495057;
+            --highlight-bg: var(--default-highlight-bg);
+            --highlight-border: var(--default-highlight-border);
+            --highlight-text: var(--default-highlight-text);
+            --info-bg: var(--default-info-bg);
+            --info-border: var(--default-info-border);
+            --info-text: var(--default-info-text);
+            --warning-counts-bg: var(--info-bg);
+            --warning-counts-text: var(--info-text);
+            --warning-counts-border: var(--default-info-border);
+            --warning-not-counts-bg: var(--highlight-bg);
+            --warning-not-counts-text: var(--default-warning-not-counts-text);
+            --warning-not-counts-border: var(--default-warning-not-counts-border);
+        }
+
+        body.theme-rosa {
+            --primary-color: #e91e63;
+            --primary-color-dark: #c2185b;
+            --primary-color-hover: #d81b60;
+            --primary-color-light: #fce4ec;
+            --primary-color-border: #f8bbd0;
+            --body-bg: #fce4ec;
+            --card-bg: white;
+            --text-color: #333;
+            --text-color-light: #495057;
+            --highlight-bg: var(--default-highlight-bg);
+            --highlight-border: var(--default-highlight-border);
+            --highlight-text: var(--default-highlight-text);
+            --info-bg: var(--default-info-bg);
+            --info-border: var(--default-info-border);
+            --info-text: var(--default-info-text);
+            --warning-counts-bg: var(--info-bg);
+            --warning-counts-text: var(--info-text);
+            --warning-counts-border: var(--default-info-border);
+            --warning-not-counts-bg: var(--highlight-bg);
+            --warning-not-counts-text: var(--default-warning-not-counts-text);
+            --warning-not-counts-border: var(--default-warning-not-counts-border);
+        }
+
+        body.theme-roxo {
+            --primary-color: #8e24aa;
+            --primary-color-dark: #6a1b9a;
+            --primary-color-hover: #7b1fa2;
+            --primary-color-light: #e1bee7;
+            --primary-color-border: #ce93d8;
+            --body-bg: #f3e5f5;
+            --card-bg: white;
+            --text-color: #333;
+            --text-color-light: #495057;
+            --highlight-bg: var(--default-highlight-bg);
+            --highlight-border: var(--default-highlight-border);
+            --highlight-text: var(--default-highlight-text);
+            --info-bg: var(--default-info-bg);
+            --info-border: var(--default-info-border);
+            --info-text: var(--default-info-text);
+            --warning-counts-bg: var(--info-bg);
+            --warning-counts-text: var(--info-text);
+            --warning-counts-border: var(--default-info-border);
+            --warning-not-counts-bg: var(--highlight-bg);
+            --warning-not-counts-text: var(--default-warning-not-counts-text);
+            --warning-not-counts-border: var(--default-warning-not-counts-border);
+        }
+
+        body.theme-amoled {
+            --primary-color: #ffffff;
+            /* Branco para contraste máximo */
+            --primary-color-dark: #cccccc;
+            /* Cinza claro para variações */
+            --primary-color-hover: #f0f0f0;
+            /* Efeito de hover sutil */
+            --primary-color-light: #1a1a1a;
+            /* Fundo sutil para inputs */
+            --primary-color-border: #333333;
+            /* Bordas visíveis mas não gritantes */
+            --body-bg: #000000;
+            /* Fundo preto puro */
+            --card-bg: #000000;
+            /* Fundo do card preto puro */
+            --text-color: #ffffff;
+            /* Texto principal branco */
+            --text-color-light: #a0a0a0;
+            /* Texto secundário cinza claro */
+            --highlight-bg: #2c1a1d;
+            /* Mantido para destaque de aviso */
+            --highlight-border: #cf6679;
+            --highlight-text: #cf6679;
+            --info-bg: #1e2b23;
+            /* Mantido para destaque de informação */
+            --info-border: #66bb6a;
+            --info-text: #66bb6a;
+            --warning-counts-bg: var(--info-bg);
+            --warning-counts-text: var(--info-text);
+            --warning-counts-border: var(--info-border);
+            --warning-not-counts-bg: var(--highlight-bg);
+            --warning-not-counts-text: var(--highlight-text);
+            --warning-not-counts-border: var(--highlight-border);
+        }
+
+        body.theme-amoled .help-btn {
+            background-color: #333333;
+            border-color: #555555;
+            color: #e0e0e0;
+        }
+
+        body.theme-amoled .help-btn:hover {
+            background-color: #444444;
+        }
+
+        body.theme-amoled button {
+            background: linear-gradient(to bottom, #555555, #333333);
+            color: #ffffff;
+        }
+
+        body.theme-amoled button:hover {
+            background: linear-gradient(to bottom, #666666, #444444);
         }
 
         .calculator {
-            background: white;
+            background: var(--card-bg);
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 82, 204, 0.1);
-            border: 1px solid #d1e3ff;
+            border: 1px solid var(--primary-color-border);
             position: relative;
             max-width: 500px;
             /* Definindo largura máxima */
@@ -31,12 +169,13 @@
         }
 
         h1 {
-            color: #0052cc;
+            color: var(--primary-color-dark);
             text-align: center;
             margin-bottom: 25px;
             font-size: 22px;
             font-weight: 600;
             padding: 0 35px;
+            /* Garante espaço para o botão de ajuda nos dois lados */
         }
 
         .form-group {
@@ -47,7 +186,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #0066ff;
+            color: var(--primary-color);
             font-size: 14px;
         }
 
@@ -55,22 +194,23 @@
         select {
             width: 100%;
             padding: 12px;
-            border: 1px solid #b3d1ff;
+            border: 1px solid var(--primary-color-border);
             border-radius: 6px;
             box-sizing: border-box;
             font-size: 15px;
-            background-color: #f5faff;
+            background-color: var(--primary-color-light);
+            color: var(--text-color);
         }
 
         input:focus,
         select:focus {
             outline: none;
-            border-color: #4d94ff;
-            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-color-light);
         }
 
         button {
-            background: linear-gradient(to bottom, #0066ff, #0052cc);
+            background: linear-gradient(to bottom, var(--primary-color), var(--primary-color-dark));
             color: white;
             border: none;
             padding: 14px;
@@ -84,16 +224,16 @@
         }
 
         button:hover {
-            background: linear-gradient(to bottom, #005ce6, #0047b3);
+            background: linear-gradient(to bottom, var(--primary-color-hover), var(--primary-color-dark));
             box-shadow: 0 2px 8px rgba(0, 82, 204, 0.3);
         }
 
         .result {
             margin-top: 25px;
             padding: 20px;
-            background: #e6f2ff;
+            background: var(--primary-color-light);
             border-radius: 8px;
-            border-left: 4px solid #0066ff;
+            border-left: 4px solid var(--primary-color);
         }
 
         .result-pulse {
@@ -102,9 +242,9 @@
 
         .result h2 {
             margin-top: 0;
-            color: #0047b3;
+            color: var(--primary-color-dark);
             font-size: 18px;
-            border-bottom: 1px solid #cce0ff;
+            border-bottom: 1px solid var(--primary-color-border);
             padding-bottom: 10px;
             margin-bottom: 15px;
         }
@@ -114,7 +254,7 @@
             justify-content: space-between;
             margin: 1px 0;
             padding: 8px 0;
-            border-bottom: 1px dashed #cce0ff;
+            border-bottom: 1px dashed var(--primary-color-border);
         }
 
         .result-item:last-child {
@@ -122,15 +262,15 @@
         }
 
         .result-item strong {
-            color: #0066ff;
+            color: var(--primary-color);
         }
 
         .highlight {
-            background-color: #ffebee;
+            background-color: var(--highlight-bg);
             padding: 8px;
             border-radius: 6px;
             margin-top: 1px;
-            border-left: 4px solid #f44336;
+            border-left: 4px solid var(--highlight-border);
         }
 
         .highlight .result-item {
@@ -139,20 +279,20 @@
         }
 
         .highlight strong {
-            color: #f44336;
+            color: var(--highlight-text);
             font-weight: 600;
         }
 
         .dates-info {
-            background-color: #e8f5e9;
+            background-color: var(--info-bg);
             padding: 12px;
             border-radius: 6px;
             margin-bottom: 15px;
-            border-left: 4px solid #4caf50;
+            border-left: 4px solid var(--info-border);
         }
 
         .dates-info strong {
-            color: #2e7d32;
+            color: var(--info-text);
         }
 
         .time-warning {
@@ -165,15 +305,15 @@
         }
 
         .time-warning.counts {
-            background-color: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #a5d6a7;
+            background-color: var(--warning-counts-bg);
+            color: var(--warning-counts-text);
+            border: 1px solid var(--warning-counts-border);
         }
 
         .time-warning.not-counts {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 1px solid #ef9a9a;
+            background-color: var(--warning-not-counts-bg);
+            color: var(--warning-not-counts-text);
+            border: 1px solid var(--warning-not-counts-border);
         }
 
         .explanation-card {
@@ -181,22 +321,22 @@
             margin-top: 0;
             max-width: 520px;
             padding: 20px;
-            background: #f8f9fa;
+            background: var(--card-bg);
             border-radius: 8px;
-            border: 1px solid #dee2e6;
+            border: 1px solid var(--primary-color-border);
             font-size: 14px;
             line-height: 1.6;
         }
 
         .explanation-card h3 {
-            color: #0052cc;
+            color: var(--primary-color-dark);
             font-size: 18px;
             margin-top: 0;
             margin-bottom: 15px;
         }
 
         .explanation-card h4 {
-            color: #0066ff;
+            color: var(--primary-color);
             font-size: 15px;
             margin-top: 15px;
             margin-bottom: 10px;
@@ -205,7 +345,7 @@
         .explanation-card p,
         .explanation-card li {
             margin-bottom: 8px;
-            color: #495057;
+            color: var(--text-color-light);
         }
 
         .explanation-card ul {
@@ -216,7 +356,7 @@
 
         .explanation-card strong {
             font-weight: 600;
-            color: #343a40;
+            color: var(--text-color);
         }
 
         .help-btn {
@@ -226,9 +366,9 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background-color: #0066ff;
+            background-color: var(--primary-color);
             color: white;
-            border: 1px solid #0052cc;
+            border: 1px solid var(--primary-color-dark);
             box-shadow: none;
             font-size: 18px;
             font-weight: bold;
@@ -243,7 +383,7 @@
         }
 
         .help-btn:hover {
-            background-color: #0052cc;
+            background-color: var(--primary-color-dark);
             transform: scale(1.1);
         }
 
@@ -291,12 +431,12 @@
         .close-hint {
             text-align: center;
             font-style: italic;
-            color: #6c757d;
+            color: var(--text-color-light);
             font-size: 13px;
             margin-top: 20px;
             margin-bottom: 0;
             padding-top: 10px;
-            border-top: 1px dashed #dee2e6;
+            border-top: 1px dashed var(--primary-color-border);
         }
 
         .explanation-card,
@@ -338,10 +478,60 @@
                 transform: translateY(0);
             }
         }
+
+        #theme-cycle-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: 2px solid var(--card-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            transition: all 0.3s;
+        }
+
+        #theme-cycle-btn:hover {
+            transform: scale(1.1) rotate(20deg);
+        }
+
+        #clear-storage-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--highlight-bg);
+            color: var(--highlight-text);
+            border: 2px solid var(--card-bg);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            transition: all 0.3s;
+        }
+
+        #clear-storage-btn:hover {
+            transform: scale(1.1);
+            background-color: var(--highlight-border);
+            color: var(--card-bg);
+        }
     </style>
 </head>
 
-<body>
+<body class="theme-default">
     <div class="calculator">
         <button id="help-btn" class="help-btn">?</button>
         <h1>Calculadora de Proporcional de Uso</h1>
@@ -369,7 +559,7 @@
 
         <div class="form-group">
             <label for="cancelDate">Último Uso:</label>
-            <input type="date" id="cancelDate">
+            <input type="date" id="cancelDate" autocomplete="off">
         </div>
 
         <div class="form-group">
@@ -387,7 +577,7 @@
 
     <div id="results-modal" class="modal-container">
         <div id="result" class="result">
-            <h2>Resultado do Cálculo</h2>
+            <h2 class="result-title">Resultado do Cálculo</h2>
             <div class="highlight">
                 <div class="result-item">
                     <span>Valor Proporcional a Pagar:</span>
@@ -458,6 +648,9 @@
             <p class="close-hint">(clique fora para fechar)</p>
         </div>
     </div>
+
+    <button id="theme-cycle-btn">🎨</button>
+    <button id="clear-storage-btn" title="Limpar dados salvos">🗑️</button>
 
     <script>
         function updateTimeWarning() {
@@ -549,15 +742,54 @@
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('cancelDate').value = now.toISOString().slice(0, 10);
 
+            // --- Lógica do seletor de horário ---
+            document.getElementById('cancelTimeRule').addEventListener('change', updateTimeWarning);
+            updateTimeWarning(); // Exibe o aviso inicial no carregamento da página
+
+            // --- Lógica de salvar e carregar inputs ---
+            const inputs = ['planValue', 'billingDay', 'cancelDate', 'cancelTimeRule'];
+
+            function saveInputs() {
+                const data = {};
+                inputs.forEach(id => {
+                    data[id] = document.getElementById(id).value;
+                });
+                localStorage.setItem('calculatorInputs', JSON.stringify(data));
+            }
+
+            function loadInputs() {
+                const savedData = localStorage.getItem('calculatorInputs');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    inputs.forEach(id => {
+                        if (data[id]) {
+                            document.getElementById(id).value = data[id];
+                        }
+                    });
+                } else {
+                    // Definir valores padrão se não houver dados salvos
+                    document.getElementById('planValue').value = '109.90';
+                    document.getElementById('billingDay').value = '5';
+                    document.getElementById('cancelTimeRule').value = 'after14';
+
+                    // Deixar a data em branco
+                    document.getElementById('cancelDate').value = '';
+                }
+                // Garante que o aviso de horário seja atualizado com os dados carregados
+                updateTimeWarning();
+            }
+
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('change', saveInputs);
+            });
+
+            loadInputs(); // Carrega os dados salvos ou define os padrões
+
             // --- Lógica dos Modais ---
             const helpBtn = document.getElementById('help-btn');
             const helpModal = document.getElementById('explanation-modal');
 
             const resultsModal = document.getElementById('results-modal');
-
-            // Lógica do seletor de horário em tempo real
-            document.getElementById('cancelTimeRule').addEventListener('change', updateTimeWarning);
-            updateTimeWarning(); // Exibe o aviso inicial no carregamento da página
 
             // Função genérica para fechar modais
             const setupModal = (modalElement) => {
@@ -579,7 +811,46 @@
 
             helpBtn.onclick = function () {
                 helpModal.classList.add('visible');
-            }
+            };
+
+            // --- Lógica do seletor de temas ---
+            const themeCycler = document.getElementById('theme-cycle-btn');
+            const body = document.body;
+            const themes = ['theme-default', 'theme-rosa', 'theme-roxo', 'theme-amoled'];
+
+            const applyTheme = (themeName) => {
+                themes.forEach(t => body.classList.remove(t));
+                body.classList.add(themeName);
+                localStorage.setItem('calculatorTheme', themeName);
+            };
+
+            themeCycler.addEventListener('click', () => {
+                const currentTheme = localStorage.getItem('calculatorTheme') || 'theme-default';
+                let currentIndex = themes.indexOf(currentTheme);
+                if (currentIndex === -1) currentIndex = 0; // Se tema salvo for inválido
+
+                const nextIndex = (currentIndex + 1) % themes.length;
+                applyTheme(themes[nextIndex]);
+            });
+
+            const loadTheme = () => {
+                let savedTheme = localStorage.getItem('calculatorTheme') || 'theme-default';
+                if (!themes.includes(savedTheme)) {
+                    savedTheme = 'theme-default';
+                }
+                applyTheme(savedTheme);
+            };
+
+            loadTheme();
+
+            // --- Lógica para limpar o storage ---
+            document.getElementById('clear-storage-btn').addEventListener('click', () => {
+                if (confirm('Tem certeza de que deseja limpar todos os dados e o tema salvos? A página será recarregada com os valores padrão.')) {
+                    localStorage.removeItem('calculatorInputs');
+                    localStorage.removeItem('calculatorTheme');
+                    location.reload();
+                }
+            });
         });
     </script>
 </body>
