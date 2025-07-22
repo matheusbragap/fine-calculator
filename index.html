@@ -8,11 +8,14 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
             background-color: #f5fbff;
             color: #333;
+            /* Centralização do card principal */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
         }
 
         .calculator {
@@ -22,6 +25,9 @@
             box-shadow: 0 4px 15px rgba(0, 82, 204, 0.1);
             border: 1px solid #d1e3ff;
             position: relative;
+            max-width: 500px;
+            /* Definindo largura máxima */
+            width: 100%;
         }
 
         h1 {
@@ -87,21 +93,7 @@
             padding: 20px;
             background: #e6f2ff;
             border-radius: 8px;
-            display: none;
             border-left: 4px solid #0066ff;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .result-pulse {
@@ -255,8 +247,9 @@
             transform: scale(1.1);
         }
 
-        .explanation-modal {
+        .modal-container {
             display: none;
+            /* Escondido por padrão */
             position: fixed;
             z-index: 1000;
             left: 0;
@@ -268,6 +261,27 @@
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.3s ease;
+        }
+
+        .modal-container.visible {
+            display: flex;
+        }
+
+        .explanation-modal {
+            display: none;
+            /* Escondido por padrão */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+            /* Adicionando animação aqui também */
         }
 
         .explanation-modal.visible {
@@ -283,6 +297,46 @@
             margin-bottom: 0;
             padding-top: 10px;
             border-top: 1px dashed #dee2e6;
+        }
+
+        .explanation-card,
+        .result {
+            position: relative;
+            max-width: 520px;
+            width: 90%;
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 5px;
+            right: 15px;
+            color: #aaa;
+            font-size: 30px;
+            font-weight: bold;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .close-modal-btn:hover,
+        .close-modal-btn:focus {
+            color: black;
+            text-decoration: none;
+            outline: none !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
@@ -329,7 +383,9 @@
         <div id="time-warning" class="time-warning"></div>
 
         <button onclick="calculate()">Calcular</button>
+    </div>
 
+    <div id="results-modal" class="modal-container">
         <div id="result" class="result">
             <h2>Resultado do Cálculo</h2>
             <div class="highlight">
@@ -364,7 +420,7 @@
                     <strong id="cycleStartDate"></strong>
                 </div>
                 <div class="result-item">
-                    <span>Último Uso (data base):</span>
+                    <span id="lastUsedLabel">Último Uso:</span>
                     <strong id="displayCancelDate"></strong>
                 </div>
                 <div class="result-item">
@@ -372,6 +428,7 @@
                     <strong id="nextBillingDate"></strong>
                 </div>
             </div>
+            <p class="close-hint">(clique fora para fechar)</p>
         </div>
     </div>
 
@@ -403,6 +460,21 @@
     </div>
 
     <script>
+        function updateTimeWarning() {
+            const cancelTimeRule = document.getElementById('cancelTimeRule').value;
+            const dayIsCounted = cancelTimeRule === 'after14';
+            const timeWarningDiv = document.getElementById('time-warning');
+
+            if (dayIsCounted) {
+                timeWarningDiv.textContent = 'AVISO: O último dia de uso (após as 14h) está incluso no cálculo.';
+                timeWarningDiv.className = 'time-warning counts';
+            } else {
+                timeWarningDiv.textContent = 'AVISO: O último dia de uso (antes das 14h) NÃO está incluso no cálculo.';
+                timeWarningDiv.className = 'time-warning not-counts';
+            }
+            timeWarningDiv.style.display = 'block';
+        }
+
         function calculate() {
             // --- 1. PEGAR INPUTS ---
             const rawPlanValue = document.getElementById('planValue').value;
@@ -423,16 +495,6 @@
 
             // --- 2. REGRA DO HORÁRIO ---
             const dayIsCounted = cancelTimeRule === 'after14';
-
-            const timeWarningDiv = document.getElementById('time-warning');
-            if (dayIsCounted) {
-                timeWarningDiv.textContent = 'AVISO: O último dia de uso (após as 14h) está incluso no cálculo.';
-                timeWarningDiv.className = 'time-warning counts';
-            } else {
-                timeWarningDiv.textContent = 'AVISO: O último dia de uso (antes das 14h) NÃO está incluso no cálculo.';
-                timeWarningDiv.className = 'time-warning not-counts';
-            }
-            timeWarningDiv.style.display = 'block';
 
             // Define a data efetiva para o cálculo
             let effectiveCancelDate = new Date(cancelDate.getTime());
@@ -464,6 +526,8 @@
             const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             const formatDate = (date) => date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
 
+            document.getElementById('lastUsedLabel').textContent = dayIsCounted ? 'Último Uso (dia contado):' : 'Último Uso (dia não contado):';
+
             document.getElementById('proportionalValue').textContent = formatCurrency(proportionalValue);
             document.getElementById('discountValue').textContent = formatCurrency(discountValue);
             document.getElementById('displayPlanValue').textContent = formatCurrency(planValue);
@@ -475,7 +539,7 @@
             document.getElementById('displayCancelDate').textContent = formatDate(cancelDate); // Mostra a data real
             document.getElementById('nextBillingDate').textContent = formatDate(nextBillingDate);
 
-            document.getElementById('result').style.display = 'block';
+            document.getElementById('results-modal').classList.add('visible');
         }
 
         // Set default date and time to today
@@ -485,19 +549,36 @@
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('cancelDate').value = now.toISOString().slice(0, 10);
 
-            // --- Lógica do Modal de Ajuda ---
+            // --- Lógica dos Modais ---
             const helpBtn = document.getElementById('help-btn');
-            const modal = document.getElementById('explanation-modal');
+            const helpModal = document.getElementById('explanation-modal');
+
+            const resultsModal = document.getElementById('results-modal');
+
+            // Lógica do seletor de horário em tempo real
+            document.getElementById('cancelTimeRule').addEventListener('change', updateTimeWarning);
+            updateTimeWarning(); // Exibe o aviso inicial no carregamento da página
+
+            // Função genérica para fechar modais
+            const setupModal = (modalElement) => {
+                // O botão de fechar é opcional
+                const closeBtn = modalElement.querySelector('.close-modal-btn');
+                if (closeBtn) {
+                    closeBtn.onclick = () => modalElement.classList.remove('visible');
+                }
+
+                modalElement.onclick = (event) => {
+                    if (event.target == modalElement) {
+                        modalElement.classList.remove('visible');
+                    }
+                };
+            };
+
+            setupModal(helpModal);
+            setupModal(resultsModal);
 
             helpBtn.onclick = function () {
-                modal.classList.add('visible');
-            }
-
-            // Fecha o modal se o usuário clicar fora do card
-            modal.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.classList.remove('visible');
-                }
+                helpModal.classList.add('visible');
             }
         });
     </script>
