@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Proporcional</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5fbff;
+            color: #333;
+        }
+
+        .calculator {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 82, 204, 0.1);
+            border: 1px solid #d1e3ff;
+        }
+
+        h1 {
+            color: #0052cc;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #0066ff;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #b3d1ff;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 15px;
+            background-color: #f5faff;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #4d94ff;
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+        }
+
+        button {
+            background: linear-gradient(to bottom, #0066ff, #0052cc);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(to bottom, #005ce6, #0047b3);
+            box-shadow: 0 2px 8px rgba(0, 82, 204, 0.3);
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #e6f2ff;
+            border-radius: 8px;
+            display: none;
+            border-left: 4px solid #0066ff;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-pulse {
+            animation: pulseBorder 1s;
+        }
+
+        .result h2 {
+            margin-top: 0;
+            color: #0047b3;
+            font-size: 18px;
+            border-bottom: 1px solid #cce0ff;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 1px 0;
+            padding: 8px 0;
+            border-bottom: 1px dashed #cce0ff;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item strong {
+            color: #0066ff;
+        }
+
+        .highlight {
+            background-color: #ffebee;
+            padding: 8px;
+            border-radius: 6px;
+            margin-top: 1px;
+            border-left: 4px solid #f44336;
+        }
+
+        .highlight .result-item {
+            border-bottom: none;
+            margin: 1px 0;
+        }
+
+        .highlight strong {
+            color: #f44336;
+            font-weight: 600;
+        }
+
+        .dates-info {
+            background-color: #e8f5e9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .dates-info strong {
+            color: #2e7d32;
+        }
+
+        .time-warning {
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .time-warning.counts {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
+        .time-warning.not-counts {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="calculator">
+        <h1>Calculadora de Proporcional de Uso</h1>
+
+        <div class="form-group">
+            <label for="planValue">Valor Total do Plano (R$):</label>
+            <input type="text" id="planValue" list="common-plans" placeholder="Ex: 159,90">
+            <datalist id="common-plans">
+                <option value="109.90"></option>
+                <option value="159.90"></option>
+                <option value="189.90"></option>
+                <option value="209.90"></option>
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="billingDay">Dia de Vencimento:</label>
+            <select id="billingDay">
+                <option value="5">Dia 05</option>
+                <option value="15">Dia 15</option>
+                <option value="25">Dia 25</option>
+                <option value="30">Dia 30</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="cancelDate">Último Uso:</label>
+            <input type="date" id="cancelDate">
+        </div>
+
+        <div class="form-group">
+            <label for="cancelTimeRule">Horário do Último Uso:</label>
+            <select id="cancelTimeRule">
+                <option value="after14">Passou das 14h (dia do útimo uso conta no cálculo)</option>
+                <option value="before14">Não passou das 14h (dia do útimo uso não conta no cálculo)</option>
+            </select>
+        </div>
+
+        <div id="time-warning" class="time-warning"></div>
+
+        <button onclick="calculate()">Calcular</button>
+
+        <div id="result" class="result">
+            <h2>Resultado do Cálculo</h2>
+            <div class="highlight">
+                <div class="result-item">
+                    <span>Valor Proporcional a Pagar:</span>
+                    <strong id="proportionalValue"></strong>
+                </div>
+            </div>
+            <div class="result-item">
+                <span>Desconto da Fatura:</span>
+                <strong id="discountValue"></strong>
+            </div>
+            <div class="result-item">
+                <span>Valor do Plano:</span>
+                <strong id="displayPlanValue"></strong>
+            </div>
+            <div class="result-item">
+                <span>Dias Utilizados:</span>
+                <strong id="daysUsed"></strong>
+            </div>
+            <div class="result-item">
+                <span>Dias até Vencimento:</span>
+                <strong id="daysRemaining"></strong>
+            </div>
+            <div class="result-item">
+                <span>Valor Diário:</span>
+                <strong id="dailyValue"></strong>
+            </div>
+            <div class="dates-info">
+                <div class="result-item">
+                    <span>Início do Ciclo:</span>
+                    <strong id="cycleStartDate"></strong>
+                </div>
+                <div class="result-item">
+                    <span>Último Uso (data base):</span>
+                    <strong id="displayCancelDate"></strong>
+                </div>
+                <div class="result-item">
+                    <span>Próximo Vencimento:</span>
+                    <strong id="nextBillingDate"></strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // --- 1. PEGAR INPUTS ---
+            const rawPlanValue = document.getElementById('planValue').value;
+            const planValue = parseFloat(rawPlanValue.replace(',', '.'));
+            const billingDay = parseInt(document.getElementById('billingDay').value);
+            const cancelDate = new Date(document.getElementById('cancelDate').value);
+            const cancelTimeRule = document.getElementById('cancelTimeRule').value;
+
+            // --- VALIDAÇÃO ---
+            if (isNaN(planValue) || planValue <= 0) {
+                alert('Por favor, insira um valor válido para o plano.');
+                return;
+            }
+            if (isNaN(cancelDate.getTime())) {
+                alert('Por favor, selecione uma data de último uso válida.');
+                return;
+            }
+
+            // --- 2. REGRA DO HORÁRIO ---
+            const dayIsCounted = cancelTimeRule === 'after14';
+
+            const timeWarningDiv = document.getElementById('time-warning');
+            if (dayIsCounted) {
+                timeWarningDiv.textContent = 'AVISO: O último dia de uso (após as 14h) está incluso no cálculo.';
+                timeWarningDiv.className = 'time-warning counts';
+            } else {
+                timeWarningDiv.textContent = 'AVISO: O último dia de uso (antes das 14h) NÃO está incluso no cálculo.';
+                timeWarningDiv.className = 'time-warning not-counts';
+            }
+            timeWarningDiv.style.display = 'block';
+
+            // Define a data efetiva para o cálculo
+            let effectiveCancelDate = new Date(cancelDate.getTime());
+            if (!dayIsCounted) {
+                effectiveCancelDate.setDate(effectiveCancelDate.getDate() - 1);
+            }
+
+            // --- 3. CÁLCULO DAS DATAS DO CICLO ---
+            let cycleStartDate = new Date(cancelDate.getFullYear(), cancelDate.getMonth(), billingDay);
+            if (cycleStartDate > cancelDate) {
+                cycleStartDate.setMonth(cycleStartDate.getMonth() - 1);
+            }
+
+            let nextBillingDate = new Date(cycleStartDate.getFullYear(), cycleStartDate.getMonth() + 1, billingDay);
+
+            // --- 4. CÁLCULO DOS VALORES ---
+            // Regra: Mês sempre tem 30 dias.
+            const dailyValue = planValue / 30;
+
+            const timeDiff = effectiveCancelDate.getTime() - cycleStartDate.getTime();
+            const daysUsed = Math.floor(timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+            const daysRemaining = 30 - daysUsed;
+
+            const discountValue = dailyValue * daysRemaining;
+            const proportionalValue = planValue - discountValue;
+
+            // --- 5. EXIBIR RESULTADOS ---
+            const formatCurrency = (value) => value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            const formatDate = (date) => date.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+
+            document.getElementById('proportionalValue').textContent = formatCurrency(proportionalValue);
+            document.getElementById('discountValue').textContent = formatCurrency(discountValue);
+            document.getElementById('displayPlanValue').textContent = formatCurrency(planValue);
+            document.getElementById('daysUsed').textContent = `${daysUsed} dias`;
+            document.getElementById('daysRemaining').textContent = `${daysRemaining} dias`;
+            document.getElementById('dailyValue').textContent = formatCurrency(dailyValue);
+
+            document.getElementById('cycleStartDate').textContent = formatDate(cycleStartDate);
+            document.getElementById('displayCancelDate').textContent = formatDate(cancelDate); // Mostra a data real
+            document.getElementById('nextBillingDate').textContent = formatDate(nextBillingDate);
+
+            document.getElementById('result').style.display = 'block';
+        }
+
+        // Set default date and time to today
+        document.addEventListener('DOMContentLoaded', function () {
+            const now = new Date();
+            // Corrige o fuso horário para pegar a data local corretamente
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('cancelDate').value = now.toISOString().slice(0, 10);
+        });
+    </script>
+</body>
+
+</html>
