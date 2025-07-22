@@ -21,6 +21,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 82, 204, 0.1);
             border: 1px solid #d1e3ff;
+            position: relative;
         }
 
         h1 {
@@ -29,6 +30,7 @@
             margin-bottom: 25px;
             font-size: 22px;
             font-weight: 600;
+            padding: 0 35px;
         }
 
         .form-group {
@@ -168,7 +170,6 @@
             font-size: 14px;
             text-align: center;
             display: none;
-            /* Hidden by default */
         }
 
         .time-warning.counts {
@@ -182,11 +183,113 @@
             color: #c62828;
             border: 1px solid #ef9a9a;
         }
+
+        .explanation-card {
+            position: relative;
+            margin-top: 0;
+            max-width: 520px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .explanation-card h3 {
+            color: #0052cc;
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .explanation-card h4 {
+            color: #0066ff;
+            font-size: 15px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        .explanation-card p,
+        .explanation-card li {
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .explanation-card ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .explanation-card strong {
+            font-weight: 600;
+            color: #343a40;
+        }
+
+        .help-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #0066ff;
+            color: white;
+            border: 1px solid #0052cc;
+            box-shadow: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+
+        .help-btn:hover {
+            background-color: #0052cc;
+            transform: scale(1.1);
+        }
+
+        .explanation-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-modal.visible {
+            display: flex;
+        }
+
+        .close-hint {
+            text-align: center;
+            font-style: italic;
+            color: #6c757d;
+            font-size: 13px;
+            margin-top: 20px;
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px dashed #dee2e6;
+        }
     </style>
 </head>
 
 <body>
     <div class="calculator">
+        <button id="help-btn" class="help-btn">?</button>
         <h1>Calculadora de Proporcional de Uso</h1>
 
         <div class="form-group">
@@ -272,6 +375,33 @@
         </div>
     </div>
 
+    <div id="explanation-modal" class="explanation-modal">
+        <div class="explanation-card">
+            <h3>Entendendo a Calculadora</h3>
+
+            <h4>Como o cálculo é feito:</h4>
+            <ul>
+                <li><strong>Valor Diário:</strong> O Valor Total do Plano é dividido por 30 (a base de dias do ciclo).
+                </li>
+                <li><strong>Dias Utilizados:</strong> Contamos os dias desde o Início do Ciclo até o Último Uso,
+                    aplicando a regra das 14h.</li>
+                <li><strong>Dias até Vencimento:</strong> São os 30 dias do ciclo menos os dias já utilizados.</li>
+                <li><strong>Desconto da Fatura:</strong> Multiplicamos o Valor Diário pelos Dias até Vencimento.</li>
+                <li><strong>Valor Proporcional a Pagar:</strong> É o valor total do plano menos o desconto gerado.</li>
+            </ul>
+
+            <h4>O que cada campo faz:</h4>
+            <ul>
+                <li><strong>Valor Total do Plano:</strong> O custo mensal completo do serviço.</li>
+                <li><strong>Dia de Vencimento:</strong> O dia em que a fatura fecha e um novo ciclo se inicia.</li>
+                <li><strong>Último Uso:</strong> A data final em que o serviço foi utilizado.</li>
+                <li><strong>Horário do Último Uso:</strong> Define se o dia do último uso será cobrado. Se o uso foi
+                    breve ("Não passou das 14h"), esse dia não entra na conta para gerar mais desconto.</li>
+            </ul>
+            <p class="close-hint">(clique fora para fechar)</p>
+        </div>
+    </div>
+
     <script>
         function calculate() {
             // --- 1. PEGAR INPUTS ---
@@ -354,6 +484,21 @@
             // Corrige o fuso horário para pegar a data local corretamente
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             document.getElementById('cancelDate').value = now.toISOString().slice(0, 10);
+
+            // --- Lógica do Modal de Ajuda ---
+            const helpBtn = document.getElementById('help-btn');
+            const modal = document.getElementById('explanation-modal');
+
+            helpBtn.onclick = function () {
+                modal.classList.add('visible');
+            }
+
+            // Fecha o modal se o usuário clicar fora do card
+            modal.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.classList.remove('visible');
+                }
+            }
         });
     </script>
 </body>
